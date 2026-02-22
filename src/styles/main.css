@@ -1,0 +1,137 @@
+/* ===== Base Styles ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #1e293b;
+}
+
+.container {
+  padding: 60px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+p {
+  font-size: 16px;
+  color: #475569;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background-color: #1e293b;
+  color: white;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+.navbar a:hover {
+  opacity: 0.8;
+}
+
+.login-btn {
+  padding: 6px 14px;
+  background-color: #3b82f6;
+  border-radius: 4px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  padding: 8px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #1d4ed8;
+  cursor: pointer;
+}
+
+/* ===== Forms ===== */
+.form-box {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  margin: 20px auto;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.form-box textarea {
+  resize: none;
+}
+
+/* ===== Dashboard Cards ===== */
+.dashboard-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  width: 260px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* ===== Status Colors ===== */
+.status {
+  font-weight: bold;
+  margin-left: 6px;
+}
+
+.status.pending {
+  color: #f59e0b;
+}
+
+.status.approved {
+  color: #16a34a;
+}
+
+.status.rejected {
+  color: #dc2626;
+}

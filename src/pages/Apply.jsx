@@ -13,31 +13,96 @@ export default function Apply() {
     (s) => s.id === parseInt(id)
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
     addApplication({
       id: Date.now(),
+      scholarshipId: scholarship.id,
       scholarshipTitle: scholarship.title,
-      status: "Pending"
+      fullName: formData.get("fullName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      course: formData.get("course"),
+      university: formData.get("university"),
+      gpa: formData.get("gpa"),
+      statement: formData.get("statement"),
+      status: "Pending",
+      appliedAt: new Date().toLocaleDateString(),
     });
 
     navigate("/student");
   };
 
+  if (!scholarship) {
+    return <div>Scholarship not found.</div>;
+  }
+
   return (
     <>
       <Navbar />
-      <div className="container">
-        <h2>Apply for {scholarship.title}</h2>
-        <p>{scholarship.description}</p>
 
-        <div className="form-box">
-          <input type="text" placeholder="Full Name" />
-          <input type="email" placeholder="Email" />
-          <textarea placeholder="Statement of Purpose" rows="4"></textarea>
+      <div className="apply-wrapper">
+        <div className="apply-container">
+          <h2>Apply for {scholarship.title}</h2>
+          <p>{scholarship.description}</p>
 
-          <button className="btn" onClick={handleSubmit}>
-            Submit Application
-          </button>
+          <form onSubmit={handleSubmit} className="apply-form">
+            <input
+              name="fullName"
+              type="text"
+              placeholder="Full Name"
+              required
+            />
+
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              required
+            />
+
+            <input
+              name="phone"
+              type="text"
+              placeholder="Phone Number"
+              required
+            />
+
+            <input
+              name="course"
+              type="text"
+              placeholder="Course / Program"
+              required
+            />
+
+            <input
+              name="university"
+              type="text"
+              placeholder="University / College"
+              required
+            />
+
+            <input
+              name="gpa"
+              type="text"
+              placeholder="GPA / Percentage"
+              required
+            />
+
+            <textarea
+              name="statement"
+              placeholder="Statement of Purpose (Minimum 100 words)"
+              rows="5"
+              required
+            ></textarea>
+
+            <button type="submit" className="btn-primary full">
+              Submit Application
+            </button>
+          </form>
         </div>
       </div>
     </>

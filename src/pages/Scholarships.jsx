@@ -1,16 +1,20 @@
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { ScholarshipContext } from "../context/ScholarshipContext";
 
 
 export default function Scholarships() {
-const { scholarships } = useContext(ScholarshipContext);
+const { scholarships, fetchScholarships } = useContext(ScholarshipContext);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [amountRange, setAmountRange] = useState("All");
   const [sortOption, setSortOption] = useState("None");
+
+  useEffect(() => {
+    fetchScholarships().catch(() => {});
+  }, [fetchScholarships]);
 
   let filtered = scholarships.filter((sch) => {
 

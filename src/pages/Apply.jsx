@@ -19,7 +19,6 @@ export default function Apply() {
     const formData = new FormData(e.target);
 
     addApplication({
-      id: Date.now(),
       scholarshipId: scholarship.id,
       scholarshipTitle: scholarship.title,
       fullName: formData.get("fullName"),
@@ -50,47 +49,12 @@ export default function Apply() {
           <p>{scholarship.description}</p>
 
           <form onSubmit={handleSubmit} className="apply-form">
-            <input
-              name="fullName"
-              type="text"
-              placeholder="Full Name"
-              required
-            />
-
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              required
-            />
-
-            <input
-              name="phone"
-              type="text"
-              placeholder="Phone Number"
-              required
-            />
-
-            <input
-              name="course"
-              type="text"
-              placeholder="Course / Program"
-              required
-            />
-
-            <input
-              name="university"
-              type="text"
-              placeholder="University / College"
-              required
-            />
-
-            <input
-              name="gpa"
-              type="text"
-              placeholder="GPA / Percentage"
-              required
-            />
+            <input name="fullName" type="text" placeholder="Full Name" required />
+            <input name="email" type="email" placeholder="Email" required />
+            <input name="phone" type="text" placeholder="Phone Number" required />
+            <input name="course" type="text" placeholder="Course / Program" required />
+            <input name="university" type="text" placeholder="University / College" required />
+            <input name="gpa" type="text" placeholder="GPA / Percentage" required />
 
             <textarea
               name="statement"

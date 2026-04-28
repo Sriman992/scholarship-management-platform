@@ -1,35 +1,58 @@
 import Navbar from "../components/Navbar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ScholarshipContext } from "../context/ScholarshipContext";
 
 export default function ScholarshipManagement() {
-  const {
-    scholarships,
-    addScholarship,
-    updateScholarship,
-    deleteScholarship,
-  } = useContext(ScholarshipContext);
+ const {
+  scholarships,
+  addNewScholarship,
+  editScholarship,
+  removeScholarship,
+  fetchScholarships,
+} = useContext(ScholarshipContext);
 
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
+  useEffect(() => {
+    fetchScholarships().catch(() => {});
+  }, [fetchScholarships]);
+
   // Add Scholarship
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    addScholarship({
-      id: Date.now(),
-      title: formData.get("title"),
-      category: formData.get("category"),
-      amount: Number(formData.get("amount")),
-      deadline: formData.get("deadline"),
-      description: formData.get("description"),
-    });
+    try {
+      await addNewScholarship({
+        title: formData.get("title"),
+        category: formData.get("category"),
+        amount: Number(formData.get("amount")),
+        deadline: formData.get("deadline"),
+        description: formData.get("description"),
+      });
 
-    e.target.reset();
-    setShowAdd(false);
+      e.target.reset();
+      setShowAdd(false);
+    } catch (error) {
+      const status = error.response?.status;
+      const serverMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.response?.data ||
+        error.message;
+      const readableMessage =
+        typeof serverMessage === "string"
+          ? serverMessage
+          : JSON.stringify(serverMessage);
+
+      alert(
+        readableMessage?.trim()
+          ? `Could not add scholarship${status ? ` (${status})` : ""}: ${readableMessage}`
+          : "Could not add scholarship. Please try again."
+      );
+    }
   };
 
   // Start Editing
@@ -40,7 +63,7 @@ export default function ScholarshipManagement() {
 
   // Save Edit
   const handleSave = (id) => {
-    updateScholarship(id, editData);
+   editScholarship(id, editData);
     setEditingId(null);
   };
 
@@ -205,7 +228,7 @@ export default function ScholarshipManagement() {
 
                     <button
                       className="btn"
-                      onClick={() => deleteScholarship(sch.id)}
+                      onClick={() => removeScholarship(sch.id)}
                       style={{ backgroundColor: "#dc2626" }}
                     >
                       Delete

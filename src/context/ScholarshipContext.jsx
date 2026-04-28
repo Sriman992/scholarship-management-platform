@@ -1,50 +1,75 @@
-import { createContext, useState, useEffect } from "react";
-import { scholarships as initialData } from "../data/scholarships";
+import { createContext, useState, useEffect, useCallback } from "react";
+import {
+  getScholarships,
+  addScholarship,
+  updateScholarship,
+  deleteScholarship,
+} from "../services/ScholarshipService";
 
 export const ScholarshipContext = createContext();
 
 export const ScholarshipProvider = ({ children }) => {
   const [scholarships, setScholarships] = useState([]);
 
+  // 🔁 FETCH DATA FROM BACKEND
+  const fetchScholarships = useCallback(async () => {
+    try {
+      const res = await getScholarships();
+      setScholarships(res.data);
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching scholarships:", error);
+      throw error;
+    }
+  }, []);
+
+  // 🚀 LOAD ON START
   useEffect(() => {
-  const stored = localStorage.getItem("scholarships");
+    fetchScholarships().catch(() => {});
+  }, [fetchScholarships]);
 
-  if (stored !== null) {
-    setScholarships(JSON.parse(stored));
-  } else {
-    // Only run this once ever
-    localStorage.setItem("scholarships", JSON.stringify(initialData));
-    setScholarships(initialData);
-  }
-}, []);
-
-  const addScholarship = (newScholarship) => {
-    const updated = [...scholarships, newScholarship];
-    setScholarships(updated);
-    localStorage.setItem("scholarships", JSON.stringify(updated));
+  // ➕ ADD
+  const addNewScholarship = async (data) => {
+    try {
+      const res = await addScholarship(data);
+      await fetchScholarships(); // refresh
+      return res.data;
+    } catch (error) {
+      console.error("Error adding scholarship:", error);
+      throw error;
+    }
   };
 
-  const updateScholarship = (id, updatedData) => {
-    const updated = scholarships.map((s) =>
-      s.id === id ? { ...s, ...updatedData } : s
-    );
-    setScholarships(updated);
-    localStorage.setItem("scholarships", JSON.stringify(updated));
+  // ✏️ UPDATE
+  const editScholarship = async (id, updatedData) => {
+    try {
+      await updateScholarship(id, updatedData);
+      await fetchScholarships();
+    } catch (error) {
+      console.error("Error updating scholarship:", error);
+      throw error;
+    }
   };
 
-  const deleteScholarship = (id) => {
-    const updated = scholarships.filter((s) => s.id !== id);
-    setScholarships(updated);
-    localStorage.setItem("scholarships", JSON.stringify(updated));
+  // ❌ DELETE
+  const removeScholarship = async (id) => {
+    try {
+      await deleteScholarship(id);
+      await fetchScholarships();
+    } catch (error) {
+      console.error("Error deleting scholarship:", error);
+      throw error;
+    }
   };
 
   return (
     <ScholarshipContext.Provider
       value={{
         scholarships,
-        addScholarship,
-        updateScholarship,
-        deleteScholarship,
+        addNewScholarship,
+        editScholarship,
+        removeScholarship,
+        fetchScholarships,
       }}
     >
       {children}

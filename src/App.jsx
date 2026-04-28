@@ -9,6 +9,7 @@ import Apply from "./pages/Apply";
 import Applications from "./pages/Applications";
 import AdminApplications from "./pages/AdminApplications";
 import ScholarshipManagement from "./pages/ScholarshipManagement";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./styles/main.css";
 
 function App() {
@@ -20,18 +21,64 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Student */}
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/scholarships" element={<Scholarships />} />
-        <Route path="/apply/:id" element={<Apply />} />
-        <Route path="/applications" element={<Applications />} />
+        {/* Student Routes - Protected */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute requiredRole="STUDENT">
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/scholarships"
+          element={
+            <ProtectedRoute requiredRole="STUDENT">
+              <Scholarships />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/apply/:id"
+          element={
+            <ProtectedRoute requiredRole="STUDENT">
+              <Apply />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute requiredRole="STUDENT">
+              <Applications />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Admin */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/applications" element={<AdminApplications />} />
+        {/* Admin Routes - Protected */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/applications"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminApplications />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/scholarships"
-          element={<ScholarshipManagement />}
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <ScholarshipManagement />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </BrowserRouter>

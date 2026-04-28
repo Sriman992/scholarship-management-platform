@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import {
   getScholarships,
   addScholarship,
@@ -12,27 +12,31 @@ export const ScholarshipProvider = ({ children }) => {
   const [scholarships, setScholarships] = useState([]);
 
   // 🔁 FETCH DATA FROM BACKEND
-  const fetchScholarships = async () => {
+  const fetchScholarships = useCallback(async () => {
     try {
       const res = await getScholarships();
       setScholarships(res.data);
+      return res.data;
     } catch (error) {
       console.error("Error fetching scholarships:", error);
+      throw error;
     }
-  };
+  }, []);
 
   // 🚀 LOAD ON START
   useEffect(() => {
-    fetchScholarships();
-  }, []);
+    fetchScholarships().catch(() => {});
+  }, [fetchScholarships]);
 
   // ➕ ADD
   const addNewScholarship = async (data) => {
     try {
-      await addScholarship(data);
-      fetchScholarships(); // refresh
+      const res = await addScholarship(data);
+      await fetchScholarships(); // refresh
+      return res.data;
     } catch (error) {
       console.error("Error adding scholarship:", error);
+      throw error;
     }
   };
 
@@ -40,9 +44,10 @@ export const ScholarshipProvider = ({ children }) => {
   const editScholarship = async (id, updatedData) => {
     try {
       await updateScholarship(id, updatedData);
-      fetchScholarships();
+      await fetchScholarships();
     } catch (error) {
       console.error("Error updating scholarship:", error);
+      throw error;
     }
   };
 
@@ -50,9 +55,10 @@ export const ScholarshipProvider = ({ children }) => {
   const removeScholarship = async (id) => {
     try {
       await deleteScholarship(id);
-      fetchScholarships();
+      await fetchScholarships();
     } catch (error) {
       console.error("Error deleting scholarship:", error);
+      throw error;
     }
   };
 
@@ -63,6 +69,7 @@ export const ScholarshipProvider = ({ children }) => {
         addNewScholarship,
         editScholarship,
         removeScholarship,
+        fetchScholarships,
       }}
     >
       {children}

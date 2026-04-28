@@ -36,14 +36,20 @@ export default function ScholarshipManagement() {
       e.target.reset();
       setShowAdd(false);
     } catch (error) {
+      const status = error.response?.status;
       const serverMessage =
         error.response?.data?.message ||
         error.response?.data?.error ||
-        error.response?.data;
+        error.response?.data ||
+        error.message;
+      const readableMessage =
+        typeof serverMessage === "string"
+          ? serverMessage
+          : JSON.stringify(serverMessage);
 
       alert(
-        typeof serverMessage === "string" && serverMessage.trim()
-          ? serverMessage
+        readableMessage?.trim()
+          ? `Could not add scholarship${status ? ` (${status})` : ""}: ${readableMessage}`
           : "Could not add scholarship. Please try again."
       );
     }

@@ -1,6 +1,11 @@
 import Navbar from "../components/Navbar";
+import { useContext } from "react";
+import { ScholarshipContext } from "../context/ScholarshipContext";
+
 
 export default function AdminScholarships() {
+  const { scholarships } = useContext(ScholarshipContext);
+
   return (
     <>
       <Navbar />

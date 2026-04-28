@@ -3,12 +3,12 @@ import { useContext, useState } from "react";
 import { ScholarshipContext } from "../context/ScholarshipContext";
 
 export default function ScholarshipManagement() {
-  const {
-    scholarships,
-    addScholarship,
-    updateScholarship,
-    deleteScholarship,
-  } = useContext(ScholarshipContext);
+ const {
+  scholarships,
+  addNewScholarship,
+  editScholarship,
+  removeScholarship,
+} = useContext(ScholarshipContext);
 
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -19,14 +19,13 @@ export default function ScholarshipManagement() {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    addScholarship({
-      id: Date.now(),
-      title: formData.get("title"),
-      category: formData.get("category"),
-      amount: Number(formData.get("amount")),
-      deadline: formData.get("deadline"),
-      description: formData.get("description"),
-    });
+    addNewScholarship({
+  title: formData.get("title"),
+  category: formData.get("category"),
+  amount: Number(formData.get("amount")),
+  deadline: formData.get("deadline"),
+  description: formData.get("description"),
+});
 
     e.target.reset();
     setShowAdd(false);
@@ -40,7 +39,7 @@ export default function ScholarshipManagement() {
 
   // Save Edit
   const handleSave = (id) => {
-    updateScholarship(id, editData);
+   editScholarship(id, editData);
     setEditingId(null);
   };
 
@@ -205,7 +204,7 @@ export default function ScholarshipManagement() {
 
                     <button
                       className="btn"
-                      onClick={() => deleteScholarship(sch.id)}
+                      onClick={() => removeScholarship(sch.id)}
                       style={{ backgroundColor: "#dc2626" }}
                     >
                       Delete

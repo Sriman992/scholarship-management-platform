@@ -18,7 +18,6 @@ export default function AdminApplications() {
           <div className="admin-application-list">
             {applications.map((app) => (
               <div key={app.id} className="admin-application-card">
-                
                 <h3>{app.scholarshipTitle}</h3>
 
                 <div className="application-details">

@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import loginImage from "../assets/login-illustration.png";
-import { loginUser } from "../services/authService";
+import { loginUser, logoutUser } from "../services/authService";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    logoutUser();
 
     try {
       const res = await loginUser({ email, password });
@@ -25,13 +26,17 @@ export default function Login() {
         throw new Error("Login failed: No JWT token received from server.");
       }
 
-      // Store token, role, and email
+      const decoded = jwtDecode(token);
+      const role = payload?.role ?? decoded?.role;
+      const userEmail = payload?.email ?? decoded?.sub;
+
+      if (!role || !userEmail) {
+        throw new Error("Login failed: Invalid login response from server.");
+      }
+
       localStorage.setItem("token", token);
-      
-      // Get role from response (backend now sends it)
-      const role = payload?.role ?? "STUDENT";
       localStorage.setItem("role", role);
-      localStorage.setItem("email", payload?.email ?? email);
+      localStorage.setItem("email", userEmail);
 
       // Redirect based on role
       if (role === "ADMIN") {
@@ -40,6 +45,7 @@ export default function Login() {
         navigate("/student");
       }
     } catch (error) {
+      logoutUser();
       console.error("Login failed:", error);
 
       const serverMessage =

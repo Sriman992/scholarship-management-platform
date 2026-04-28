@@ -1,24 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getAuthSession, logoutUser } from "../services/authService";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    const email = localStorage.getItem("email");
+    const session = getAuthSession();
 
-    if (token && role) {
-      setUser({ email, role });
+    if (session) {
+      setUser({ email: session.email, role: session.role });
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("email");
+    logoutUser();
     setUser(null);
     navigate("/");
   };
